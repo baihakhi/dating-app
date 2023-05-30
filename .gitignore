@@ -1,0 +1,15 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# credentials
+config/.env
+
+# temporary file and logs
+tmp/
+
+# air config
+.air.toml

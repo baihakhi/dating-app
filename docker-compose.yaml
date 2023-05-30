@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  postgres_db:
+    image: postgres:15.3
+    container_name: dating_app_db
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=dating_app
+      - TZ='GMT-7'
+      - PGTZ='GMT-7'
+    ports:
+      - 5432:5432
+    volumes:
+      - ./internal/databases/schemas/000001_initial_schemas.up.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"]
+      timeout: 20s
+      retries: 10
+
+  # node_backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./config/.env
+  #   volumes:
+  #     - ./:/simple-shop
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - postgres_db
+
+volumes:
+  postgres_data:
