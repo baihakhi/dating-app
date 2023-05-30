@@ -21,19 +21,19 @@ services:
       timeout: 20s
       retries: 10
 
-  # node_backend:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   restart: unless-stopped
-  #   env_file:
-  #     - ./config/.env
-  #   volumes:
-  #     - ./:/simple-shop
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - postgres_db
+  node_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./config/.env
+    volumes:
+      - ./:/dating-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_db
 
 volumes:
   postgres_data:
