@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/baihakhi/dating-app/internal/models"
@@ -21,9 +20,12 @@ func SetMiddlewareAuthentication(access []string) echo.MiddlewareFunc {
 				return err
 			}
 
-			if !user.IsVerified {
-				//
-				log.Println("User is not verified")
+			if user.LastLogin == nil {
+				err := response.ErrorBuilder("", response.AccessDenied)
+				c.JSON(http.StatusUnauthorized, response.MapResponse{
+					Message: err.Error(),
+				})
+				return err
 			}
 			c.SetRequest(c.Request().WithContext(context.WithValue(c.Request().Context(), models.ACC, user)))
 			return next(c)

@@ -5,10 +5,16 @@ import (
 
 	"github.com/baihakhi/dating-app/internal/middleware"
 	"github.com/baihakhi/dating-app/internal/models"
+	"github.com/baihakhi/dating-app/internal/models/enum"
 	hash "github.com/baihakhi/dating-app/internal/utils/bycript"
 )
 
 func (s *service) CreateUser(data *models.User) (string, error) {
+	hashedPass, err := hash.Encrypt(data.Password)
+	if err != nil {
+		return "", err
+	}
+	data.Password = hashedPass
 	return s.repositories.CreateUser(data)
 }
 
@@ -36,6 +42,14 @@ func (s *service) Login(data *models.User) (string, error) {
 
 	acc, err := s.repositories.GetOneUsersByUsername(strings.ToLower(data.Username))
 	if err != nil {
+		return "", err
+	}
+
+	if err := s.repositories.PatchUserLogin(acc.ID); err != nil {
+		return "", err
+	}
+
+	if err := s.repositories.RedisUserSwipes(acc.Username, enum.InitialSwipes); err != nil {
 		return "", err
 	}
 

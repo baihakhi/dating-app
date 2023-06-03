@@ -13,8 +13,7 @@ import (
 	_ "github.com/lib/pq"
 
 	// "github.com/golang-migrate/migrate/database/postgres"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
+
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
@@ -49,22 +48,21 @@ func Config() *sql.DB {
 	}
 
 	// migration
-	driver, err := postgres.WithInstance(db, &postgres.Config{})
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	m, err := migrate.NewWithDatabaseInstance(
-		"file://./internal/databases/schemas/",
-		"postgres",
-		driver,
-	)
-	if err != nil {
-		fmt.Println(err)
-	}
-	if err = m.Up(); err != nil && err != migrate.ErrNoChange {
-		fmt.Printf("error applying migrations: %v\n", err)
-	}
+	// driver, err := postgres.WithInstance(db, &postgres.Config{})
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// m, err := migrate.NewWithDatabaseInstance(
+	// 	"file://./internal/databases/schemas/",
+	// 	"postgres",
+	// 	driver,
+	// )
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// if err = m.Up(); err != nil && err != migrate.ErrNoChange {
+	// 	fmt.Printf("error applying migrations: %v\n", err)
+	// }
 
 	return db
 }

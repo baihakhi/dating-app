@@ -1,6 +1,9 @@
 package repositories
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/baihakhi/dating-app/internal/models"
 	"github.com/baihakhi/dating-app/internal/repositories/queries"
 )
@@ -8,6 +11,7 @@ import (
 // CreateUser creates a new user in the database with the provided data.
 func (r *repository) CreateUser(data *models.User) (string, error) {
 	var username string
+	fmt.Println(data.Interest)
 	if err := r.db.QueryRow(queries.CreateUser,
 		data.Username,
 		data.Email,
@@ -39,6 +43,7 @@ func (r *repository) GetOneUsersByUsername(username string) (*models.User, error
 			&result.City,
 			&result.Interest,
 			&result.IsVerified,
+			&result.LastLogin,
 			&result.CreatedAt,
 			&result.UpdatedAt,
 		); err != nil {
@@ -64,6 +69,12 @@ func (r *repository) PatchUserVerified(userID uint64) error {
 	return err
 }
 
+// PatchUserLogin updates the last_login value of a user in the database.
+func (r *repository) PatchUserLogin(userID uint64) error {
+	_, err := r.db.Exec(queries.PatchUserLogin, userID)
+	return err
+}
+
 // NextUser retrieves the next user from the database based on the provided userID.
 func (r *repository) NextUser(userID uint64) (*models.User, error) {
 	var result models.User
@@ -81,4 +92,9 @@ func (r *repository) NextUser(userID uint64) (*models.User, error) {
 		return nil, err
 	}
 	return &result, nil
+}
+
+// RedisUserLogin updates the last_login value of a user in the database.
+func (r *repository) RedisUserSwipes(username string, swipes int) error {
+	return r.redis.HSet(username, models.USwipes, swipes, 24*time.Hour)
 }

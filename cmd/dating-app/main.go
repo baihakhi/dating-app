@@ -29,7 +29,7 @@ func main() {
 
 	SetupMiddleware(e)
 
-	repositories := repositories.InitRepository(driver.Config())
+	repositories := repositories.InitRepository(driver.Config(), driver.Redis())
 	services := services.InitService(repositories)
 	handlers := handler.InitiHandler(services)
 

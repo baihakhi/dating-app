@@ -2,8 +2,8 @@ package queries
 
 const (
 	CreateUser = `
-	INSERT INTO users (username, email, password, full_name, gender, preference, city, interest)
-	VALUES ($1, $2, $3, $4, $5, $6, #7, $8)
+	INSERT INTO users (username, email, password, full_name, gender, preference, city, interests)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	RETURNING username
 	`
 
@@ -16,8 +16,9 @@ const (
 		gender, 
 		preference, 
 		city, 
-		interest,
+		interests,
 		is_verified,
+		last_login,
 		created_at,
 		updated_at
 	FROM users
@@ -33,10 +34,19 @@ const (
 		username = $1
 	LIMIT 1
 	`
+
 	PatchUserVerified = `
 	UPDATE users
 	SET
 		is_verified = true
+	WHERE 
+		user_id = $1
+	`
+
+	PatchUserLogin = `
+	UPDATE users
+	SET
+		last_login = now()
 	WHERE 
 		user_id = $1
 	`
@@ -47,8 +57,8 @@ const (
 		FROM users
 		WHERE 
 			user_id = $1
-	), current_user_interest AS (
-		SELECT unnest(string_to_array(interest, ', ')) AS interest
+	), current_user_interests AS (
+		SELECT unnest(string_to_array(interests, ', ')) AS interests
 		FROM current_user
 	)
 	SELECT 
@@ -58,10 +68,11 @@ const (
 		u.gender, 
 		u.preference,
 		u.city, 
-		u.interest
+		u.interests
 	FROM users u
-	JOIN current_user_interest cui ON u.interest ILIKE '%' || cui.interest || '%'
+	JOIN current_user_interests cui ON u.interests ILIKE '%' || cui.interests || '%'
 	WHERE u.user_id <> $1
+		AND u.gender = current_user.preference
 		AND user_id NOT IN (
 			SELECT swiped_id
 			FROM swipes
@@ -71,7 +82,7 @@ const (
 			FROM matches
 			WHERE user1_id = $1 OR user2_id = $1
 		)
-		OR cui.interest IS NULL
+		OR cui.interests IS NULL
 	ORDER BY RANDOM()
 	LIMIT 1;
 	`

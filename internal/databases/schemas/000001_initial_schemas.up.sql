@@ -5,11 +5,13 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
-    gender VARCHAR(50) DEFAULT 'not_specified'::character varying CHECK(gender IN ('male', 'female', 'other', 'not_specified')),
+    gender VARCHAR(50) DEFAULT 'not_specified'::character varying CHECK(gender IN ('male', 'female', 'not_specified')),
     preference VARCHAR(50) DEFAULT 'not_specified'::character varying CHECK(preference IN ('male', 'female', 'both', 'not_specified')),
     city VARCHAR(50),
     interests TEXT,
+    is_verified BOOLEAN NOT NULL DEFAULT false,
 
+    last_login TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
