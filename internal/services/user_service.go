@@ -26,6 +26,10 @@ func (s *service) PatchUserVerified(userID uint64) error {
 	return s.repositories.PatchUserVerified(userID)
 }
 
+func (s *service) RemoveSwipeLimit(username string) error {
+	return s.repositories.RedisUserRemoveLImit(username)
+}
+
 func (s *service) NextUser(userID uint64) (*models.User, error) {
 	return s.repositories.NextUser(userID)
 }
@@ -49,8 +53,10 @@ func (s *service) Login(data *models.User) (string, error) {
 		return "", err
 	}
 
-	if err := s.repositories.RedisUserSwipes(acc.Username, enum.InitialSwipes); err != nil {
-		return "", err
+	if !acc.IsVerified {
+		if err := s.repositories.RedisUserSetSwipes(acc.Username, enum.InitialSwipes, 24); err != nil {
+			return "", err
+		}
 	}
 
 	return middleware.CreateToken(*acc)

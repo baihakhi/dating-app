@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"fmt"
+	"encoding/json"
 	"time"
 
 	"github.com/baihakhi/dating-app/internal/models"
@@ -11,7 +11,6 @@ import (
 // CreateUser creates a new user in the database with the provided data.
 func (r *repository) CreateUser(data *models.User) (string, error) {
 	var username string
-	fmt.Println(data.Interest)
 	if err := r.db.QueryRow(queries.CreateUser,
 		data.Username,
 		data.Email,
@@ -81,6 +80,7 @@ func (r *repository) NextUser(userID uint64) (*models.User, error) {
 
 	if err := r.db.QueryRow(queries.NextUser, userID).
 		Scan(
+			&result.ID,
 			&result.Username,
 			&result.Email,
 			&result.Fullname,
@@ -94,7 +94,27 @@ func (r *repository) NextUser(userID uint64) (*models.User, error) {
 	return &result, nil
 }
 
-// RedisUserLogin updates the last_login value of a user in the database.
-func (r *repository) RedisUserSwipes(username string, swipes int) error {
-	return r.redis.HSet(username, models.USwipes, swipes, 24*time.Hour)
+// RedisUserSwipes set max swipes per day in redis.
+func (r *repository) RedisUserSetSwipes(username string, swipes int, t time.Duration) error {
+	return r.redis.HSet(username, models.USwipes, swipes, t*time.Hour)
+}
+
+// RedisUserSwipes remove max swipes per day in redis.
+func (r *repository) RedisUserRemoveLImit(username string) error {
+	return r.redis.HDel(username, models.USwipes)
+}
+
+// RedisUserGetSwipes get swipes left from redis.
+func (r *repository) RedisUserGetSwipes(username string) (int, error) {
+	var swipes int
+	result, err := r.redis.HGet(username, models.USwipes)
+	if err != nil {
+		return 0, err
+	}
+
+	if err := json.Unmarshal(result, &swipes); err != nil {
+		return 0, err
+	}
+
+	return swipes, nil
 }

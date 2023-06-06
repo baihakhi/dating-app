@@ -18,6 +18,7 @@ func CreateToken(user models.User) (string, error) {
 	claims["username"] = user.Username
 	claims["full_name"] = user.Fullname
 	claims["is_verified"] = user.IsVerified
+	claims["last_login"] = user.LastLogin
 
 	if claims["is_verified"] == false {
 		claims["reset"] = time.Now().Add(time.Hour * 24).Unix()

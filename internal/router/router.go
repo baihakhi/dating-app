@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/baihakhi/dating-app/internal/handler"
+	"github.com/baihakhi/dating-app/internal/middleware"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,6 +19,12 @@ func InitRouter(server *echo.Echo, handler *handler.Handler) {
 		{
 			user.POST("/register", handler.Register)
 			user.POST("/login", handler.Login)
+			user.PUT("/verify/:username", handler.VerifyUser, middleware.SetMiddlewareAuthentication())
+		}
+
+		swipe := v1.Group("/swipe")
+		{
+			swipe.POST("/next", handler.SwipeAct, middleware.SetMiddlewareAuthentication())
 		}
 	}
 }

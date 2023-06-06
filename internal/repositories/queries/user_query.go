@@ -52,16 +52,17 @@ const (
 	`
 
 	NextUser = `
-	WITH current_user AS (
+	WITH curent_user AS (
 		SELECT *
 		FROM users
 		WHERE 
 			user_id = $1
-	), current_user_interests AS (
+	), curent_user_interests AS (
 		SELECT unnest(string_to_array(interests, ', ')) AS interests
-		FROM current_user
+		FROM curent_user
 	)
 	SELECT 
+		u.user_id,
 		u.username, 
 		u.email, 
 		u.full_name, 
@@ -70,9 +71,8 @@ const (
 		u.city, 
 		u.interests
 	FROM users u
-	JOIN current_user_interests cui ON u.interests ILIKE '%' || cui.interests || '%'
+	JOIN curent_user_interests cui ON u.interests ILIKE '%' || cui.interests || '%'
 	WHERE u.user_id <> $1
-		AND u.gender = current_user.preference
 		AND user_id NOT IN (
 			SELECT swiped_id
 			FROM swipes

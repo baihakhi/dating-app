@@ -18,8 +18,8 @@ type (
 		Preference string     `json:"preference"`
 		City       string     `json:"city"`
 		Interest   string     `json:"interests"`
-		IsVerified bool       `json:"is_verified"`
-		LastLogin  *time.Time `json:"last_login"`
+		IsVerified bool       `json:"is_verified,omitempty"`
+		LastLogin  *time.Time `json:"last_login,omitempty"`
 
 		CreatedAt *time.Time `json:"created_at,omitempty"`
 		UpdatedAt *time.Time `json:"updated_at,omitempty"`

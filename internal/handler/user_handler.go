@@ -53,7 +53,7 @@ func (h *Handler) Login(c echo.Context) error {
 	result, err := h.service.Login(data)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response.MapResponse{
-			Message: err.Error(),
+			Message: response.AccessDenied,
 		})
 	}
 
@@ -67,6 +67,13 @@ func (h *Handler) Login(c echo.Context) error {
 
 func (h *Handler) VerifyUser(c echo.Context) error {
 	account := c.Request().Context().Value(models.ACC).(*models.User)
+	username := c.Param("username")
+
+	if username != account.Username {
+		return c.JSON(http.StatusForbidden, response.MapResponse{
+			Message: response.AccessDenied,
+		})
+	}
 
 	user, err := h.service.GetOneUserByUsername(account.Username)
 	if err != nil {
@@ -80,6 +87,13 @@ func (h *Handler) VerifyUser(c echo.Context) error {
 			Message: err.Error(),
 		})
 	}
+
+	if err := h.service.RemoveSwipeLimit(user.Username); err != nil {
+		return c.JSON(http.StatusBadRequest, response.MapResponse{
+			Message: err.Error(),
+		})
+	}
+
 	return c.JSON(http.StatusOK, response.MapResponse{
 		Message: response.SUCCESS,
 		Data:    response.SUCCESS,

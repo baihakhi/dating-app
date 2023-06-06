@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func SetMiddlewareAuthentication(access []string) echo.MiddlewareFunc {
+func SetMiddlewareAuthentication() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			user, err := TokenValid(c.Request())
@@ -22,7 +22,7 @@ func SetMiddlewareAuthentication(access []string) echo.MiddlewareFunc {
 
 			if user.LastLogin == nil {
 				err := response.ErrorBuilder("", response.AccessDenied)
-				c.JSON(http.StatusUnauthorized, response.MapResponse{
+				c.JSON(http.StatusForbidden, response.MapResponse{
 					Message: err.Error(),
 				})
 				return err

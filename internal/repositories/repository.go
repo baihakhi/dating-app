@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"time"
 
 	driver "github.com/baihakhi/dating-app/internal/databases"
 	"github.com/baihakhi/dating-app/internal/models"
@@ -27,5 +28,11 @@ type Repositories interface {
 	PatchUserVerified(userID uint64) error
 	PatchUserLogin(userID uint64) error
 	NextUser(userID uint64) (*models.User, error)
-	RedisUserSwipes(username string, swipes int) error
+
+	RedisUserGetSwipes(username string) (int, error)
+	RedisUserSetSwipes(username string, swipes int, t time.Duration) error
+	RedisUserRemoveLImit(username string) error
+
+	// Swipe Repository
+	CreateSwipe(swiper, swiped uint64, is_liked bool) (int64, error)
 }

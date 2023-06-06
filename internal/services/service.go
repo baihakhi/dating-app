@@ -22,4 +22,8 @@ type Services interface {
 	PatchUserVerified(userID uint64) error
 	NextUser(userID uint64) (*models.User, error)
 	Login(data *models.User) (string, error)
+	RemoveSwipeLimit(username string) error
+
+	// Swipe Services
+	CreateSwipe(username string, swiper, swiped uint64, is_liked bool) (int64, error)
 }
