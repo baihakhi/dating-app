@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/baihakhi/dating-app/internal/models"
@@ -28,13 +27,10 @@ func (h *Handler) SwipeAct(c echo.Context) error {
 	}
 
 	if data.Swiped > 0 {
-		fmt.Printf("/nSwiper id: %d/nswiped id: %d\n", data.Swiped, user.ID)
 		swipeLog, _ := h.service.GetSwipe(data.Swiped, user.ID)
-		fmt.Println("log", swipeLog)
 		if swipeLog != nil {
 			if swipeLog.IsLiked {
 				matchID, err = h.service.CreateMatch(data.Swiped, user.ID)
-				fmt.Println("match id:", matchID)
 				if err != nil {
 					return c.JSON(http.StatusBadRequest, response.MapResponse{
 						Message: err.Error(),
@@ -48,7 +44,6 @@ func (h *Handler) SwipeAct(c echo.Context) error {
 			}
 		}
 
-		fmt.Println("not liked")
 		swipeID, err = h.service.CreateSwipe(user.Username, user.ID, data.Swiped, data.IsLiked)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, response.MapResponse{
