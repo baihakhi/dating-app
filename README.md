@@ -1,7 +1,12 @@
-# todo-app and JWT token
+# dating-app with JWT token
 
 ## setup dependencies
-- [golang-migrate](https://github.com/golang-migrate/migrate) Install migrate CLI
+- [golang-migrate](https://github.com/golang-migrate/migrate) to install migrate CLI
+
+- Postgresql
+    ```
+    docker compose up -d postgres_db
+    ```
 
 - Migration
     ```
@@ -18,3 +23,4 @@
     make run
     ```
 ## Docs
+ - Postman collection [here](https://elements.getpostman.com/redirect?entityId=21574323-cc1a5a9e-b6ae-4692-94dd-c708ccaa02b6&entityType=collection)
