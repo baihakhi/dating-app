@@ -19,7 +19,6 @@ func SetMiddlewareAuthentication() echo.MiddlewareFunc {
 				})
 				return err
 			}
-
 			if user.LastLogin == nil {
 				err := response.ErrorBuilder("", response.AccessDenied)
 				c.JSON(http.StatusForbidden, response.MapResponse{

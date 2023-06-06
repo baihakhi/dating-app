@@ -71,7 +71,7 @@ const (
 		u.city, 
 		u.interests
 	FROM users u
-	JOIN curent_user_interests cui ON u.interests ILIKE '%' || cui.interests || '%'
+	LEFT JOIN curent_user_interests cui ON u.interests ILIKE '%' || cui.interests || '%'
 	WHERE u.user_id <> $1
 		AND user_id NOT IN (
 			SELECT swiped_id
