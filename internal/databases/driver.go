@@ -9,10 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-
-	// "github.com/golang-migrate/migrate/database/postgres"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
@@ -21,12 +18,6 @@ var (
 	redisClientOnce sync.Once
 	redisClient     RedisClient
 )
-
-func init() {
-	if err := godotenv.Load("./config/.env"); err != nil {
-		panic(err)
-	}
-}
 
 // Config return database with listed configuration below
 func Config() *sql.DB {

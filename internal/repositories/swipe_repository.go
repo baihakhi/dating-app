@@ -5,9 +5,12 @@ import (
 	"github.com/baihakhi/dating-app/internal/repositories/queries"
 )
 
-func (r *repository) CreateSwipe(swiper, swiped uint64, is_liked bool) (int64, error) {
+// CreateSwipe creates a new swipe record in the database.
+// It takes the ID of the swiper, the ID of the swiped user, and a boolean indicating whether the swipe is a like or dislike.
+// It returns the ID of the created swipe record or an error if it fails.
+func (r *repository) CreateSwipe(swiper, swiped uint64, isLiked bool) (int64, error) {
 	var result int64
-	err := r.db.QueryRow(queries.CreateSwipe, swiper, swiped, is_liked).Scan(&result)
+	err := r.db.QueryRow(queries.CreateSwipe, swiper, swiped, isLiked).Scan(&result)
 	if err != nil {
 		return 0, err
 	}
@@ -15,6 +18,8 @@ func (r *repository) CreateSwipe(swiper, swiped uint64, is_liked bool) (int64, e
 	return result, nil
 }
 
+// GetSwipe retrieves a swipe record from the database based on the swiper ID and user ID.
+// It returns a pointer to the retrieved Swipe model or an error if it fails.
 func (r *repository) GetSwipe(swiperID, userID uint64) (*models.Swipe, error) {
 	result := new(models.Swipe)
 
@@ -24,10 +29,4 @@ func (r *repository) GetSwipe(swiperID, userID uint64) (*models.Swipe, error) {
 	}
 
 	return result, nil
-}
-
-func (r *repository) DeleteSwipe(userID uint64) error {
-	_, err := r.db.Exec(queries.DeleteSwipe, userID)
-
-	return err
 }

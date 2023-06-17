@@ -13,3 +13,6 @@ tmp/
 
 # air config
 .air.toml
+
+# cover test file
+cover.out
