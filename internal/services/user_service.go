@@ -61,3 +61,17 @@ func (s *service) Login(data *models.User) (string, error) {
 
 	return middleware.CreateToken(*acc)
 }
+
+
+func (s *service) Logout(data *models.User) (error) {
+	acc, err := s.repositories.GetOneUsersByUsername(strings.ToLower(data.Username))
+	if err != nil {
+		return err
+	}
+
+	if err := s.repositories.PatchUserLogout(acc.ID); err != nil {
+		return err
+	}
+
+	return nil
+}

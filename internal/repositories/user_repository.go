@@ -74,6 +74,12 @@ func (r *repository) PatchUserLogin(userID uint64) error {
 	return err
 }
 
+// PatchUserLogout removes the last_login value of a user in the database.
+func (r *repository) PatchUserLogout(userID uint64) error {
+	_, err := r.db.Exec(queries.PatchUserLogout, userID)
+	return err
+}
+
 // NextUser retrieves the next user from the database based on the provided userID.
 func (r *repository) NextUser(userID uint64) (*models.User, error) {
 	var result models.User

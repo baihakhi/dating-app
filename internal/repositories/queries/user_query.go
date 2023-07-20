@@ -51,6 +51,14 @@ const (
 		user_id = $1
 	`
 
+	PatchUserLogout = `
+	UPDATE users
+	SET
+		last_login = NULL
+	WHERE 
+		user_id = $1
+	`
+
 	NextUser = `
 	WITH curent_user AS (
 		SELECT *
