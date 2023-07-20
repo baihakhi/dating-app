@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/baihakhi/dating-app/internal/models"
@@ -65,6 +66,23 @@ func (h *Handler) Login(c echo.Context) error {
 	})
 }
 
+func (h *Handler) Logout(c echo.Context) error {
+	account := c.Request().Context().Value(models.ACC).(*models.User)
+
+	err := h.service.Logout(account)
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(http.StatusBadRequest, response.MapResponse{
+			Message: response.AccessDenied,
+		})
+	}
+
+	return c.JSON(http.StatusOK, response.MapResponse{
+		Message: response.SUCCESS,
+		Data: response.SUCCESS,
+	})
+}
+
 func (h *Handler) VerifyUser(c echo.Context) error {
 	account := c.Request().Context().Value(models.ACC).(*models.User)
 	username := c.Param("username")
@@ -97,5 +115,21 @@ func (h *Handler) VerifyUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, response.MapResponse{
 		Message: response.SUCCESS,
 		Data:    response.SUCCESS,
+	})
+}
+
+func (h *Handler) GetUserDetail(c echo.Context) error {
+	username := c.Param("username")
+
+	user, err := h.service.GetOneUserByUsername(username)
+	if err != nil {
+		return c.JSON(http.StatusNotFound, response.MapResponse{
+			Message: response.ErrorBuilder(models.UUname, response.UNKN).Error(),
+		})
+	}
+	
+	return c.JSON(http.StatusOK, response.MapResponse{
+		Message: response.SUCCESS,
+		Data: user,
 	})
 }

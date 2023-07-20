@@ -19,7 +19,10 @@ func InitRouter(server *echo.Echo, handler *handler.Handler) {
 		{
 			user.POST("/register", handler.Register)
 			user.POST("/login", handler.Login)
+			user.POST("/logout", handler.Logout, middleware.SetMiddlewareAuthentication())
 			user.PUT("/verify/:username", handler.VerifyUser, middleware.SetMiddlewareAuthentication())
+			user.GET("/:username", handler.GetUserDetail, middleware.SetMiddlewareAuthentication())
+			user.GET("/:username", handler.GetUserDetail, middleware.SetMiddlewareAuthentication())
 		}
 
 		swipe := v1.Group("/swipe")

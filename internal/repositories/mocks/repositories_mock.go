@@ -195,6 +195,20 @@ func (_m *Repositories) PatchUserLogin(userID uint64) error {
 	return r0
 }
 
+// PatchUserLogout provides a mock function with given fields: userID
+func (_m *Repositories) PatchUserLogout(userID uint64) error {
+	ret := _m.Called(userID)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uint64) error); ok {
+		r0 = rf(userID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // PatchUserVerified provides a mock function with given fields: userID
 func (_m *Repositories) PatchUserVerified(userID uint64) error {
 	ret := _m.Called(userID)

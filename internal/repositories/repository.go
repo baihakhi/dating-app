@@ -27,6 +27,7 @@ type Repositories interface {
 	GetPasswordByUsername(username string) (string, error)
 	PatchUserVerified(userID uint64) error
 	PatchUserLogin(userID uint64) error
+	PatchUserLogout(userID uint64) error
 	NextUser(userID uint64) (*models.User, error)
 
 	RedisUserGetSwipes(username string) (int, error)
