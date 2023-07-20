@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/baihakhi/dating-app/internal/models"
@@ -71,7 +70,6 @@ func (h *Handler) Logout(c echo.Context) error {
 
 	err := h.service.Logout(account)
 	if err != nil {
-		fmt.Println(err)
 		return c.JSON(http.StatusBadRequest, response.MapResponse{
 			Message: response.AccessDenied,
 		})
