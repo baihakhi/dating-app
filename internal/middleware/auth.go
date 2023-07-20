@@ -12,6 +12,9 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
+// CreateToken generates a JWT token for the given user.
+// and last login time. If the user is not verified, it adds a "reset" claim to the token,
+// The token is then signed using the HMAC-SHA256 signing method with the JWT signature key from the environment variables.
 func CreateToken(user models.User) (string, error) {
 	claims := jwt.MapClaims{}
 
@@ -20,17 +23,26 @@ func CreateToken(user models.User) (string, error) {
 	claims["is_verified"] = user.IsVerified
 	claims["last_login"] = user.LastLogin
 
+	// If the user is not verified, set the "reset" claim to indicate that verification needs to be reset within 24 hours.
 	if claims["is_verified"] == false {
 		claims["reset"] = time.Now().Add(time.Hour * 24).Unix()
 	}
 
+	// Create a new JWT token with the specified claims and sign it using the HMAC-SHA256 signing method
+	// with the JWT signature key from the environment variables.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(os.Getenv("JWT_SIGNATURE_KEY")))
 }
 
+// TokenValid validates the JWT token in the given HTTP request (r).
+// It parses and verifies the token using the HMAC-SHA256 signing method
 func TokenValid(r *http.Request) (*models.User, error) {
 	user := new(models.User)
+
+	// Extract the JWT token from the HTTP request.
 	tokenString := ExtractToken(r)
+
+	// Parse and verify the JWT token using the HMAC-SHA256 signing method and JWT signature key.
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -48,6 +60,7 @@ func TokenValid(r *http.Request) (*models.User, error) {
 	}
 	return user, nil
 }
+
 
 // ExtractToken extract body token to get information
 func ExtractToken(r *http.Request) string {

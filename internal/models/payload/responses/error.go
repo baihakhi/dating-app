@@ -17,6 +17,7 @@ const (
 	UNKN string = "Unknown"
 	MTCh string = "Match"
 	MDTR string = "Mandatory"
+	ULGN string = "Login"
 )
 
 var (
@@ -24,7 +25,8 @@ var (
 		INVL: "has invalid format",
 		UNKN: "is unknown",
 		MTCh: "does not match",
-		MDTR: "Cannot be empty",
+		MDTR: "cannot be empty",
+		ULGN: "need to login",
 	}
 )
 

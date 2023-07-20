@@ -1,6 +1,8 @@
 package services
 
 import (
+	"time"
+
 	"github.com/baihakhi/dating-app/internal/models"
 	"github.com/baihakhi/dating-app/internal/repositories"
 )
@@ -26,7 +28,7 @@ type Services interface {
 	RemoveSwipeLimit(username string) error
 
 	// Swipe Services
-	CreateSwipe(username string, swiper, swiped uint64, is_liked bool) (int64, error)
+	CreateSwipe(username string, swipe *models.Swipe, lastLogin *time.Time) (int64, error)
 	GetSwipe(swiperID, userID uint64) (*models.Swipe, error)
 	DeleteSwipe(userID uint64) error
 
