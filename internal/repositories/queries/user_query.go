@@ -58,7 +58,11 @@ const (
 	WHERE 
 		user_id = $1
 	`
-
+	// NextUser selects the next user to recommend based on certain criteria.
+	// It utilizes common table expressions (CTEs) to fetch the current user's details and interests.
+	// The main query then joins these CTEs with the users table to find a random user who has at least
+	// one common interest with the current user. The query also includes conditions to exclude users who
+	// have already been swiped or matched with the current user.
 	NextUser = `
 	WITH curent_user AS (
 		SELECT *

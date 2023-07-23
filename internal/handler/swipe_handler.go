@@ -40,14 +40,8 @@ func (h *Handler) SwipeAct(c echo.Context) error {
 		swipeLog, _ := h.service.GetSwipe(data.Swiped, user.ID)
 		if swipeLog != nil {
 			if swipeLog.IsLiked {
-				matchID, err = h.service.CreateMatch(data.Swiped, user.ID)
+				matchID, err = h.service.CreateMatch(data.Swiped, user.ID, swipeLog.ID)
 				if err != nil {
-					return c.JSON(http.StatusBadRequest, response.MapResponse{
-						Message: err.Error(),
-						Data: 0,
-					})
-				}
-				if err := h.service.DeleteSwipe(swipeLog.ID); err != nil {
 					return c.JSON(http.StatusBadRequest, response.MapResponse{
 						Message: err.Error(),
 						Data: 0,

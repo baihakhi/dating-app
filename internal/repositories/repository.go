@@ -37,8 +37,7 @@ type Repositories interface {
 	// Swipe Repository
 	CreateSwipe(swiper, swiped uint64, is_liked bool) (int64, error)
 	GetSwipe(swiperID, userID uint64) (*models.Swipe, error)
-	DeleteSwipe(userID uint64) error
 
 	// Match Repository
-	CreateMatch(user1, user2 uint64) (int64, error)
+	CreateMatch(user1, user2, swipeID uint64) (int64, error)
 }

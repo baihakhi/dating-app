@@ -14,20 +14,20 @@ type Repositories struct {
 	mock.Mock
 }
 
-// CreateMatch provides a mock function with given fields: user1, user2
-func (_m *Repositories) CreateMatch(user1 uint64, user2 uint64) (int64, error) {
-	ret := _m.Called(user1, user2)
+// CreateMatch provides a mock function with given fields: user1, user2, swipeID
+func (_m *Repositories) CreateMatch(user1 uint64, user2 uint64, swipeID uint64) (int64, error) {
+	ret := _m.Called(user1, user2, swipeID)
 
 	var r0 int64
-	if rf, ok := ret.Get(0).(func(uint64, uint64) int64); ok {
-		r0 = rf(user1, user2)
+	if rf, ok := ret.Get(0).(func(uint64, uint64, uint64) int64); ok {
+		r0 = rf(user1, user2, swipeID)
 	} else {
 		r0 = ret.Get(0).(int64)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(uint64, uint64) error); ok {
-		r1 = rf(user1, user2)
+	if rf, ok := ret.Get(1).(func(uint64, uint64, uint64) error); ok {
+		r1 = rf(user1, user2, swipeID)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -75,20 +75,6 @@ func (_m *Repositories) CreateUser(data *models.User) (string, error) {
 	}
 
 	return r0, r1
-}
-
-// DeleteSwipe provides a mock function with given fields: userID
-func (_m *Repositories) DeleteSwipe(userID uint64) error {
-	ret := _m.Called(userID)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(uint64) error); ok {
-		r0 = rf(userID)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
 }
 
 // GetOneUsersByUsername provides a mock function with given fields: username
