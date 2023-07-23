@@ -10,8 +10,6 @@ import (
 )
 
 // CreateSwipe creates a new swipe for the given user.
-// It takes the username of the swiper, the swipe model with swiper, swiped, and isLiked information,
-// and the last login time of the user (can be nil).
 // It returns the ID of the created swipe or an error if it fails.
 func (s *service) CreateSwipe(username string, swipe *models.Swipe, lastLogin *time.Time) (int64, error) {
 	// Get the remaining swipe count for the user from Redis
@@ -45,13 +43,7 @@ func (s *service) CreateSwipe(username string, swipe *models.Swipe, lastLogin *t
 }
 
 // GetSwipe retrieves a swipe record from the database based on the swiper ID and user ID.
-// It returns a pointer to the retrieved Swipe model or an error if it fails.
 func (s *service) GetSwipe(swiperID, userID uint64) (*models.Swipe, error) {
 	return s.repositories.GetSwipe(swiperID, userID)
 }
 
-// DeleteSwipe deletes a swipe record from the database based on the user ID.
-// It returns an error if the deletion fails.
-func (s *service) DeleteSwipe(userID uint64) error {
-	return s.repositories.DeleteSwipe(userID)
-}
